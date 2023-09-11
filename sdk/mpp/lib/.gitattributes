@@ -1,0 +1,7 @@
+librockchip_mpp.so.0 filter=lfs diff=lfs merge=lfs -text
+librockchip_mpp.so.1 filter=lfs diff=lfs merge=lfs -text
+librockchip_vpu.so filter=lfs diff=lfs merge=lfs -text
+librockchip_vpu.so.0 filter=lfs diff=lfs merge=lfs -text
+librockchip_vpu.so.1 filter=lfs diff=lfs merge=lfs -text
+pkgconfig filter=lfs diff=lfs merge=lfs -text
+librockchip_mpp.so filter=lfs diff=lfs merge=lfs -text

@@ -1,0 +1,70 @@
+#pragma once
+
+#include <rockchip/rk_mpi.h>
+
+#include <functional>
+#include <string>
+#include <thread>
+
+struct FrameInfo {
+    uint32_t height;
+    uint32_t width;
+    std::string format;
+    uint8_t fps;
+};
+
+struct StreamInfo {
+    std::string StreamType;
+    uint32_t gop;
+};
+
+struct MppEncInfo {
+    int32_t width;
+    int32_t height;
+    int32_t hor_stride;
+    int32_t ver_stride;
+    int32_t frame_size;
+    int32_t header_size;
+    int32_t mdinfo_size;
+    int32_t bps;
+    MppCodingType code_type;
+    MppFrameFormat frame_format;
+
+    MppEncRcMode rc_mode;
+};
+
+struct StreamPackage {
+    uint8_t* data;
+    uint32_t len;
+    bool is_eos;
+};
+
+class VideoEncoder {
+public:
+    VideoEncoder(const FrameInfo& frame_info, const StreamInfo& stream_info,
+        int timeout = -1, bool is_camera_dma = false);
+    ~VideoEncoder(void);
+
+    bool Init(const std::function<void(uint8_t* data, uint32_t size)>& package_callback);
+
+    bool PutFrame(uint8_t* data, uint32_t size, int dma_fd = -1);
+
+private:
+    static void EncRecvThread(VideoEncoder* self);
+    bool SetMppEncCfg(void);
+
+private:
+    MppCtx ctx_ = nullptr;
+    MppApi* api_ = nullptr;
+    MppEncCfg cfg_ = nullptr;
+
+    int timeout = -1;
+    bool is_camera_dma_ = false;
+    FrameInfo frame_info_;
+    StreamInfo stream_info_;
+    MppEncInfo enc_info_;
+
+    bool is_running_ = false;
+    std::thread recv_thread_;
+    std::function<void(uint8_t* data, uint32_t size)> package_callback_;
+};
