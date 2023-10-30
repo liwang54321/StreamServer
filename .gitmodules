@@ -1,0 +1,6 @@
+[submodule "thirdparty/mpp"]
+	path = thirdparty/mpp
+	url = https://github.com/rockchip-linux/mpp.git
+[submodule "thirdparty/ZLMediaKit"]
+	path = thirdparty/ZLMediaKit
+	url = https://github.com/ZLMediaKit/ZLMediaKit.git
