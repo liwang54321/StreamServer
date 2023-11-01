@@ -4,14 +4,17 @@ project(StreamServer VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_BINARY_DIR}")
+# LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR})
 
 find_package(OpenCV REQUIRED)
+find_package(ffmpeg REQUIRED)
 find_package(magic_enum REQUIRED)
 find_package(readerwriterqueue REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(zlmediakit REQUIRED)
 find_package(mpp REQUIRED)
+find_package(libsrtp REQUIRED)
+find_package(usrsctp REQUIRED)
 
 add_executable(${PROJECT_NAME} application/main.cpp)
 
@@ -23,17 +26,19 @@ target_sources(${PROJECT_NAME} PRIVATE
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE application/include)
-# target_include_directories(${PROJECT_NAME} PRIVATE packages/mpp/include)
 
-# target_link_directories(${PROJECT_NAME} PRIVATE packages/mpp/lib)
-# target_link_libraries(${PROJECT_NAME} PRIVATE rockchip_mpp)
-
+message(STATUS "${zlmediakit_INCLUDE_DIRS} ${zlmediakit_LIBRARIES}")
+message(STATUS "${mpp_INCLUDE_DIRS} ${mpp_LIBRARIES}")
 
 target_link_libraries(${PROJECT_NAME} PUBLIC 
     magic_enum::magic_enum 
     spdlog::spdlog_header_only
     zlmediakit::zlmediakit
-    mpp:mpp
+    mpp::mpp 
+    libsrtp::libsrtp 
+    openssl::openssl 
+    usrsctp::usrsctp
+    ffmpeg::ffmpeg
     readerwriterqueue::readerwriterqueue
 )
 

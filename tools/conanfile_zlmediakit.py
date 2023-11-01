@@ -15,7 +15,7 @@ class ZLMediaKitConan(ConanFile):
     topics = ("media", "service", "framework")
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False], "fPIC": [True, False]}
-    default_options = {"shared": False, "fPIC": True}
+    default_options = {"shared": True, "fPIC": True}
     generators = "CMakeDeps", "CMakeToolchain", "VirtualBuildEnv"
 
     def config_options(self):
@@ -50,20 +50,11 @@ class ZLMediaKitConan(ConanFile):
         cmake.install()
 
     def package_info(self):
-        self.env_info.PATH.append(os.path.join(self.package_folder, "bin"))
-        self.cpp_info.libs = ["mk_api"]
-        self.cpp_info.libdirs = ["lib"]
-        self.cpp_info.includedirs = ["include"]
-
         self.cpp_info.set_property("cmake_file_name", "zlmediakit")
         self.cpp_info.filenames["cmake_find_package"] = "zlmediakit"
         self.cpp_info.filenames["cmake_find_package_multi"] = "zlmediakit"
-        self.cpp_info.names["cmake_find_package"] = "zlmediakit"
-        self.cpp_info.names["cmake_find_package_multi"] = "zlmediakit"
+
         self.cpp_info.components["zlmediakit"].set_property("cmake_target_name", "zlmediakit::zlmediakit")
-
-        self.cpp_info.components["zlmediakit"].includedirs = ["include"]
-        self.cpp_info.components["zlmediakit"].libdirs = ["lib"]
         self.cpp_info.components["zlmediakit"].libs = ["mk_api"]
+        self.cpp_info.components["zlmediakit"].includedirs = ["include"]
         self.cpp_info.components["zlmediakit"].requires = ["libsrtp::libsrtp", "openssl::openssl", "usrsctp::usrsctp"]
-

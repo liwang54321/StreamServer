@@ -15,7 +15,7 @@ class MppConan(ConanFile):
     topics = ("media", "service", "framework")
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False], "fPIC": [True, False]}
-    default_options = {"shared": False, "fPIC": True}
+    default_options = {"shared": True, "fPIC": True}
     generators = "CMakeDeps", "CMakeToolchain", "VirtualBuildEnv"
 
     def config_options(self):
@@ -47,19 +47,30 @@ class MppConan(ConanFile):
         cmake.install()
 
     def package_info(self):
-        self.env_info.PATH.append(os.path.join(self.package_folder, "bin"))
-        self.cpp_info.libs = ["rockchip_mpp", "rockchip_vpu"]
-        self.cpp_info.libdirs = ["lib"]
-        self.cpp_info.includedirs  = ["include"]
-
         self.cpp_info.set_property("cmake_file_name", "mpp")
         self.cpp_info.filenames["cmake_find_package"] = "mpp"
         self.cpp_info.filenames["cmake_find_package_multi"] = "mpp"
         self.cpp_info.names["cmake_find_package"] = "mpp"
         self.cpp_info.names["cmake_find_package_multi"] = "mpp"
-        self.cpp_info.components["mpp"].set_property("cmake_target_name", "mpp::mpp")
 
-        self.cpp_info.components["mpp"].includedirs = ["include"]
-        self.cpp_info.components["mpp"].libdirs = ["lib"]
+        self.cpp_info.components["mpp"].set_property("cmake_target_name", "mpp::mpp")
         self.cpp_info.components["mpp"].libs = ["rockchip_mpp", "rockchip_vpu"]
+        self.cpp_info.components["mpp"].includedirs = ["include"]
+        
+        # self.cpp_info.set_property("cmake_file_name", "mpp")
+        # self.cpp_info.filenames["cmake_find_package"] = "mpp"
+        # self.cpp_info.filenames["cmake_find_package_multi"] = "mpp"
+        # self.cpp_info.names["cmake_find_package"] = "mpp"
+        # self.cpp_info.names["cmake_find_package_multi"] = "mpp"
+        # self.cpp_info.components["mpp"].set_property("cmake_target_name", "mpp::mpp")
+
+        # self.cpp_info.components["mpp"].includedirs = ["include"]
+        # self.cpp_info.components["mpp"].libdirs = ["lib"]
+        # self.cpp_info.components["mpp"].libs = ["rockchip_mpp", "rockchip_vpu"]
+
+        # self.env_info.PATH.append(os.path.join(self.package_folder, "bin"))
+        # self.cpp_info.libs = ["rockchip_mpp", "rockchip_vpu"]
+        # self.cpp_info.libdirs = ["lib"]
+        # self.cpp_info.includedirs  = ["include"]
+
 

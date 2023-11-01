@@ -1,0 +1,30 @@
+{
+    "compilationDatabaseFolder": "${workspaceFolder}/build",
+    "files.associations": {
+        "iostream": "cpp",
+        "intrinsics.h": "c",
+        "ostream": "cpp",
+        "vector": "cpp"
+    },
+    "clangd.arguments": [
+        "--header-insertion=never",
+        "--compile-commands-dir=${workspaceFolder}/build",
+        // 在后台自动分析文件(基于 complie_commands，我们用CMake生成)
+        "--background-index",
+        // 启用 Clang-Tidy 以提供「静态检查」
+        "--clang-tidy",
+        // 全局补全(输入时弹出的建议将会提供 CMakeLists.txt 里配置的所有文件中可能的符号，会自动补充头文件)
+        "--all-scopes-completion",
+        // 建议风格：打包(重载函数只会给出一个建议） 相反可以设置为detailed
+        "--completion-style=bundled",
+        "--log=verbose",
+        // 输入建议中，已包含头文件的项与还未包含头文件的项会以圆点加以区分
+        "--header-insertion-decorators",
+        // 跨文件重命名变量
+        "--cross-file-rename",
+        // pch优化的位置(memory 或 disk，选择memory会增加内存开销，但会提升性能) 推荐在板子上使用disk
+        "--pch-storage=memory",
+        // 输出的 JSON 文件更美观
+        "--pretty"
+    ]
+}

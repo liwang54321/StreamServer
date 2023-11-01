@@ -1,8 +1,9 @@
 from conan import ConanFile
-from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout
+from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout, CMakeDeps
+from conan.tools.env import VirtualRunEnv
 
 class DeviceDevelopConan(ConanFile):
-    name = "device_develop"
+    name = "DeviceDevelop"
     version = "0.1.0"
     license = "GPL"
     author = "lw liwang54321@gmail.com"
@@ -11,8 +12,20 @@ class DeviceDevelopConan(ConanFile):
     topics = ("jetson", "device")
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False], "fPIC": [True, False]}
-    default_options = {"shared": False, "fPIC": True}
-    generators = "CMakeDeps", "CMakeToolchain", "VirtualBuildEnv"
+    default_options = {"shared": True, "fPIC": True}
+    # generators = "CMakeDeps", "CMakeToolchain", "VirtualBuildEnv"
+
+    def generate(self):
+        ms = VirtualRunEnv(self)
+        ms.generate()
+        tc = CMakeToolchain(self)
+        tc.generate()
+        deps = CMakeDeps(self)
+        deps.generate()
+
+    def layout(self):
+        pass
+        # cmake_layout(self)
 
     def config_options(self):
         if self.settings.os == "Windows":
@@ -91,10 +104,6 @@ class DeviceDevelopConan(ConanFile):
         # self.requires("freetype/2.13.0")
         # self.requires("libpng/1.6.40")
 
-    # def generate(self):
-    #     tc = CMakeToolchain(self)
-    #     tc.generate()
-
     def build(self):
         cmake = CMake(self)
         cmake.configure()
@@ -105,5 +114,7 @@ class DeviceDevelopConan(ConanFile):
         cmake.install()
 
     def package_info(self):
-        self.env_info.PATH.append(os.path.join(self.package_folder, "bin"))
+        # self.env_info.PATH.append(os.path.join(self.package_folder, "bin"))
+        self.buildenv_info.append_path("PATH", os.path.join(self.package_folder, 'bin'))
+        self.runenv_info.append_path("PATH", os.path.join(self.package_folder, 'bin'))
 
